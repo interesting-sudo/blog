@@ -1,5 +1,9 @@
 # Blog System · 微服务博客系统（后端）
 
+> 🌐 **在线演示**：https://interesting-sudo.github.io/blog-web/
+> 前端演示模式构建，无需后端即可浏览首页、文章详情、评论等页面。
+> 配套前端仓库：[blog-web](https://github.com/interesting-sudo/blog-web)
+
 基于 **Spring Boot 2.7 + Spring Cloud Alibaba** 的博客系统后端，采用微服务架构拆分出 7 个独立服务，通过 Nacos 做注册发现、Spring Cloud Gateway 做统一入口，并集成 JWT 鉴权、RocketMQ 异步事件、Elasticsearch 全文检索、Seata 分布式事务与通义千问 AI 能力。
 
 ## 架构
@@ -101,4 +105,4 @@ stop-all.cmd                      # 一键停止
 
 ## 前端
 
-配套前端仓库：`blog-web`（Vue 3 + Vite + Element Plus）
+配套前端仓库：[blog-web](https://github.com/interesting-sudo/blog-web)（Vue 3 + Vite）+ 在线演示站点 https://interesting-sudo.github.io/blog-web/
