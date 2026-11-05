@@ -1,0 +1,70 @@
+server:
+  port: 8020
+
+spring:
+  application:
+    name: blog-service
+  servlet:
+    multipart:
+#      enabled: true                # 开启文件上传功能（默认开启）
+      max-file-size: 20MB          # 单个文件最大上传大小 【改成20MB足够用，头像/封面都够】
+      max-request-size: 50MB       # 单次请求所有文件总和最大大小
+      file-size-threshold: 1MB     # 超过该大小的文件会写到磁盘，默认即可
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bs_blog_db?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${MYSQL_PASSWORD:root}
+
+  #redis相关配置
+  redis:
+    database: 1
+    # 配置redis的主机地址，需要修改成自己的
+    host: 127.0.0.1
+    # 或者
+    #    host: localhost
+    port: 6379
+    password: ${REDIS_PASSWORD:123456}
+    timeout: 5000
+    jedis:
+      pool:
+        # 连接池中的最大空闲连接，默认值也是8。
+        max-idle: 500
+        # 连接池中的最小空闲连接，默认值也是0。
+        min-idle: 50
+        # 如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)
+        max-active: 1000
+        # 等待可用连接的最大时间，单位毫秒，默认值为-1，表示永不超时。如果超过等待时间，则直接抛出JedisConnectionException
+        max-wait: 2000
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        import-check:
+          enabled: false
+
+mybatis-plus:
+  type-aliases-package: com.example.dzl.entity
+  configuration:
+    # 配置打印 MyBatis 日志
+    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 开启下划线转驼峰命名映射
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+
+
+rocketmq:
+  name-server: 127.0.0.1:9876
+
+mq:
+  topic:
+    user-profile-changed: user-profile-changed-topic
+
+# 内部服务认证配置（防止直接访问内部服务）
+internal:
+  auth:
+    secret: ${INTERNAL_AUTH_SECRET:dev-internal-auth-secret-change-me}  # 内部服务认证密钥，建议使用强密码
+    header-name: X-Internal-Auth  # 内部认证请求头名称

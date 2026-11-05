@@ -1,0 +1,33 @@
+server:
+  port: 8070
+
+spring:
+  application:
+    name: search-service
+
+    # Elasticsearch 核心配置
+  elasticsearch:
+    # ES服务地址，本地启动就是localhost:9200，集群则用逗号分隔：192.168.1.100:9200,192.168.1.101:9200
+    uris: http://localhost:9200
+    # 连接超时时间
+    connection-timeout: 10s
+    # 读取超时时间
+    read-timeout: 10s
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        import-check:
+          enabled: false
+
+
+
+
+
+# 内部服务认证配置（防止直接访问内部服务）
+internal:
+  auth:
+    secret: ${INTERNAL_AUTH_SECRET:dev-internal-auth-secret-change-me}  # 内部服务认证密钥，建议使用强密码
+    header-name: X-Internal-Auth  # 内部认证请求头名称

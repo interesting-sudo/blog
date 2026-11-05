@@ -1,0 +1,41 @@
+server:
+  port: 8040
+
+spring:
+  application:
+    name: document-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        import-check:
+          enabled: false
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        port: 8725
+  servlet:
+    multipart:
+          enabled: true                # 开启文件上传功能（默认开启）
+          max-file-size: 20MB          # 单个文件最大上传大小 【改成20MB足够用，头像/封面都够】
+          max-request-size: 50MB       # 单次请求所有文件总和最大大小
+          file-size-threshold: 1MB     # 超过该大小的文件会写到磁盘，默认即可
+
+
+
+# 阿里云OSS配置 【核心】
+aliyun:
+  oss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com  # 地域节点
+    accessKeyId: ${ALIYUN_OSS_ACCESS_KEY_ID:}  # AccessKeyId（通过环境变量注入）
+    accessKeySecret: ${ALIYUN_OSS_ACCESS_KEY_SECRET:}  # AccessKeySecret（通过环境变量注入）
+    bucketName: blog-documennt
+    urlPrefix: https://${aliyun.oss.bucketName}.${aliyun.oss.endpoint}/
+
+
+# 内部服务认证配置（防止直接访问内部服务）
+internal:
+  auth:
+    secret: ${INTERNAL_AUTH_SECRET:dev-internal-auth-secret-change-me}  # 内部服务认证密钥，建议使用强密码
+    header-name: X-Internal-Auth  # 内部认证请求头名称

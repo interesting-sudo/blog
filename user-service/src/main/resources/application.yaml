@@ -1,0 +1,113 @@
+server:
+  port: 8010
+
+spring:
+  application:
+      name: user-service
+
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bs_user_db?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${MYSQL_PASSWORD:root}
+
+  #redis相关配置
+  redis:
+    database: 0
+    # 配置redis的主机地址，需要修改成自己的
+    host: 127.0.0.1
+    # 或者
+    #    host: localhost
+    port: 6379
+    password: ${REDIS_PASSWORD:123456}
+    timeout: 5000
+    jedis:
+      pool:
+        # 连接池中的最大空闲连接，默认值也是8。
+        max-idle: 500
+        # 连接池中的最小空闲连接，默认值也是0。
+        min-idle: 50
+        # 如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)
+        max-active: 1000
+        # 等待可用连接的最大时间，单位毫秒，默认值为-1，表示永不超时。如果超过等待时间，则直接抛出JedisConnectionException
+        max-wait: 2000
+
+  # 邮件相关配置
+  mail:
+    # 配置 SMTP 服务器地址
+    host: smtp.qq.com
+    # 发送者邮箱
+    username: 3287169671@qq.com
+    # 配置密码，注意不是真正的密码，而是刚刚申请到的授权码
+    password: ${MAIL_AUTH_CODE:}  # QQ邮箱 SMTP 授权码（通过环境变量注入）
+    # 端口号465或587
+    port: 465
+    # 默认的邮件编码为UTF-8
+    default-encoding: UTF-8
+    # 配置SSL 加密工厂
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+            required: true
+      #表示开启 DEBUG 模式，这样，邮件发送过程的日志会在控制台打印出来，方便排查错误
+      debug: true
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        import-check:
+          enabled: false
+    sentinel:
+      transport:
+        # Sentinel Dashboard 地址
+        dashboard: localhost:8080
+        # 应用与Dashboard交互的端口
+        port: 8720
+      # 开启Feign对Sentinel的支持
+      feign:
+        sentinel:
+          enabled: true
+
+mybatis-plus:
+  type-aliases-package: com.example.dzl.entity
+  configuration:
+    # 配置打印 MyBatis 日志
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 开启下划线转驼峰命名映射
+    map-underscore-to-camel-case: true
+
+
+# JWT配置
+jwt:
+  secret: ${JWT_SECRET:ZGV2LW9ubHktand0LXNlY3JldC1jaGFuZ2UtbWUtYmVmb3JlLXByb2R1Y3Rpb24tMDEyMzQ1Njc4OQ==}
+  access-token:
+    expire: 3600 # 1分钟，单位：秒
+  refresh-token:
+    cookie-name: refresh_token
+    expire: 604800       # 7天，单位：秒
+    sliding: false        # 是否滑动续期（每次refresh成功重置TTL）
+    rotation: true      # 是否轮换refresh（加分项，默认关）
+#    cookie:
+#      secure: true         # https环境 true，本地可 false
+#      same-site: Lax       # Lax/Strict/None(跨站需None且Secure=true)
+#      domain: ""           # 可选，如 .example.com
+
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: user-service-producer-group
+
+mq:
+  topic:
+    user-profile-changed: user-profile-changed-topic
+
+# 内部服务认证配置（防止直接访问内部服务）
+internal:
+  auth:
+    secret: ${INTERNAL_AUTH_SECRET:dev-internal-auth-secret-change-me}  # 内部服务认证密钥，建议使用强密码
+    header-name: X-Internal-Auth  # 内部认证请求头名称

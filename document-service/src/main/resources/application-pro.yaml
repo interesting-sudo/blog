@@ -1,0 +1,30 @@
+server:
+  port: 8040
+
+spring:
+  application:
+    name: document-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        import-check:
+          enabled: false
+
+
+
+# 阿里云OSS配置 【核心】
+aliyun:
+  oss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com  # 你的地域节点
+    accessKeyId: ${ALIYUN_OSS_ACCESS_KEY_ID:}  # AccessKeyId（通过环境变量注入）
+    accessKeySecret: ${ALIYUN_OSS_ACCESS_KEY_SECRET:}  # AccessKeySecret（通过环境变量注入）
+    bucketName: blog-system-2026  # 你的Bucket名称
+
+
+# 内部服务认证配置（防止直接访问内部服务）
+internal:
+  auth:
+    secret: ${INTERNAL_AUTH_SECRET:dev-internal-auth-secret-change-me}  # 内部服务认证密钥，建议使用强密码
+    header-name: X-Internal-Auth  # 内部认证请求头名称

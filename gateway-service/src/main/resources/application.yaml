@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: gateway-service
+  cloud:
+    nacos:
+          discovery:
+            server-addr: 127.0.0.1:8848
+          config:
+            import-check:
+              enabled: false
+
+
+
+# JWT配置
+jwt:
+  excludedPaths:
+    - /api/user/login
+    - /api/user/register
+    - /api/user/register/email-code
+    - /api/user/email-code/check
+    - /api/user/password/email-code
+    - /api/user/password/check
+    - /api/user/password/reset
+    - /api/user/auth/refresh
+#    - /api/public/**
+  secret: ${JWT_SECRET:ZGV2LW9ubHktand0LXNlY3JldC1jaGFuZ2UtbWUtYmVmb3JlLXByb2R1Y3Rpb24tMDEyMzQ1Njc4OQ==}
+  access-token:
+    expire: 7200
+
+
+# 内部服务认证配置（防止直接访问内部服务）
+internal:
+  auth:
+    secret: ${INTERNAL_AUTH_SECRET:dev-internal-auth-secret-change-me}  # 内部服务认证密钥，建议使用强密码
+    header-name: X-Internal-Auth  # 内部认证请求头名称

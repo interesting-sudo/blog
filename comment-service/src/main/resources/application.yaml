@@ -1,0 +1,43 @@
+server:
+  port: 8030
+
+spring:
+  application:
+    name: comment-service
+
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bs_comment_db?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${MYSQL_PASSWORD:root}
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        import-check:
+          enabled: false
+
+mybatis-plus:
+  type-aliases-package: com.example.dzl.entity
+  configuration:
+    # 配置打印 MyBatis 日志
+    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 开启下划线转驼峰命名映射
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+
+rocketmq:
+  name-server: 127.0.0.1:9876
+
+mq:
+  topic:
+    user-profile-changed: user-profile-changed-topic
+
+
+# 内部服务认证配置（防止直接访问内部服务）
+internal:
+  auth:
+    secret: ${INTERNAL_AUTH_SECRET:dev-internal-auth-secret-change-me}  # 内部服务认证密钥，建议使用强密码
+    header-name: X-Internal-Auth  # 内部认证请求头名称
